@@ -11,6 +11,7 @@ CalorieIQ uses an Encoder-Decoder pipeline:
 The project compares different regression models using R², MAE, and MSE.
 
 > 🌍 **Live Demo:** [Try CalorieIQ on Vercel](https://calorie-burn-prediction-one.vercel.app/)
+> 🔗 **Kaggle:** [Full notebook on Kaggle](https://www.kaggle.com/code/rowenasayed/calories-burn-prediction/notebook)
 
 ## Features
 
