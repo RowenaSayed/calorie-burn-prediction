@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CalorieIQ - Calories Burn Prediction</title>
+  <meta name="description" content="Predict the calories burned during physical activity with a machine learning model.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#top" class="brand">
+        <span class="brand-icon"><i data-lucide="flame"></i></span>
+        <span>CalorieIQ</span>
+      </a>
+      <nav class="nav">
+        <a href="#predict">Predict</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#inputs">Inputs</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <p class="eyebrow"><i data-lucide="activity"></i> Machine Learning Project</p>
+        <h1>Estimate the calories you burn during exercise</h1>
+        <p class="hero-text">
+          Enter your details and workout data. A regression model trained on real activity
+          records predicts how many calories you burned.
+        </p>
+        <a href="#predict" class="btn btn-accent">Start prediction</a>
+      </div>
+    </section>
+
+    <!-- Form + result -->
+    <section class="section" id="predict">
+      <div class="container predict-grid">
+
+        <!-- Form -->
+        <div class="card">
+          <h2 class="card-title">Your details</h2>
+          <p class="card-sub">All fields are required.</p>
+
+          <form id="predict-form" novalidate>
+
+            <fieldset class="field">
+              <legend>Gender</legend>
+              <div class="segmented">
+                <input type="radio" id="gender-female" name="Gender" value="female" checked>
+                <label for="gender-female"><i data-lucide="user"></i> Female</label>
+                <input type="radio" id="gender-male" name="Gender" value="male">
+                <label for="gender-male"><i data-lucide="user"></i> Male</label>
+              </div>
+            </fieldset>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="Age">Age <span class="unit">years</span></label>
+                <div class="input-wrap">
+                  <i data-lucide="calendar"></i>
+                  <input type="number" id="Age" name="Age" step="1" inputmode="numeric" placeholder="ex: 30" required>
+                </div>
+                <small class="error" data-error="Age"></small>
+              </div>
+
+              <div class="field">
+                <label for="Height">Height <span class="unit">cm</span></label>
+                <div class="input-wrap">
+                  <i data-lucide="ruler"></i>
+                  <input type="number" id="Height" name="Height" step="1" inputmode="numeric" placeholder="ex: 175" required>
+                </div>
+                <small class="error" data-error="Height"></small>
+              </div>
+
+              <div class="field">
+                <label for="Weight">Weight <span class="unit">kg</span></label>
+                <div class="input-wrap">
+                  <i data-lucide="scale"></i>
+                  <input type="number" id="Weight" name="Weight" step="1" inputmode="numeric" placeholder="ex: 70" required>
+                </div>
+                <small class="error" data-error="Weight"></small>
+              </div>
+
+              <div class="field">
+                <label for="Duration">Duration <span class="unit">minutes</span></label>
+                <div class="input-wrap">
+                  <i data-lucide="timer"></i>
+                  <input type="number" id="Duration" name="Duration" step="1" inputmode="numeric" placeholder="ex: 20" required>
+                </div>
+                <small class="error" data-error="Duration"></small>
+              </div>
+
+              <div class="field">
+                <label for="Heart_Rate">Heart Rate <span class="unit">bpm</span></label>
+                <div class="input-wrap">
+                  <i data-lucide="heart-pulse"></i>
+                  <input type="number" id="Heart_Rate" name="Heart_Rate" step="1" inputmode="numeric" placeholder="ex: 100" required>
+                </div>
+                <small class="error" data-error="Heart_Rate"></small>
+              </div>
+
+              <div class="field">
+                <label for="Body_Temp">Body Temp <span class="unit">&deg;C</span></label>
+                <div class="input-wrap">
+                  <i data-lucide="thermometer"></i>
+                  <input type="number" id="Body_Temp" name="Body_Temp" step="0.1" inputmode="decimal" placeholder="ex: 40.0" required>
+                </div>
+                <small class="error" data-error="Body_Temp"></small>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="submit-btn">
+              <i data-lucide="flame"></i>
+              <span>Predict Calories</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Result -->
+        <div class="card result-card" aria-live="polite">
+          <h2 class="card-title">Prediction result</h2>
+
+          <div id="result-empty" class="result-state">
+            <span class="result-icon"><i data-lucide="chart-no-axes-column"></i></span>
+            <p>Fill in the form and select <strong>Predict Calories</strong> to see your estimate.</p>
+          </div>
+
+          <div id="result-value" class="result-state" hidden>
+            <p class="result-label">Calories Burned</p>
+            <p class="result-number"><span id="result-kcal">0</span> <span class="result-unit">kcal</span></p>
+            <p class="result-note" id="result-note"></p>
+          </div>
+
+          <div id="result-error" class="alert" role="alert" hidden>
+            <i data-lucide="circle-alert"></i>
+            <span id="result-error-text"></span>
+          </div>
+
+          <div class="explain">
+            <h3>About this estimate</h3>
+            <p>
+              The result comes from a linear regression model with L1 regularization (Lasso).
+              It learns how age, body measurements, workout duration, heart rate and body
+              temperature relate to calories burned. In this project, duration and heart
+              rate were the strongest predictors.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section section-alt" id="how-it-works">
+      <div class="container">
+        <h2 class="section-title">How it works</h2>
+        <p class="section-sub">Your input goes through the same steps used when the model was trained.</p>
+
+        <div class="steps">
+          <div class="step">
+            <span class="step-icon"><i data-lucide="sliders-horizontal"></i></span>
+            <h3>1. Input</h3>
+            <p>You enter your details. The browser checks the values and sends them to the API.</p>
+          </div>
+          <div class="step">
+            <span class="step-icon"><i data-lucide="database"></i></span>
+            <h3>2. Preprocessing</h3>
+            <p>Gender is one-hot encoded and all features are standardized with the saved encoder and scaler.</p>
+          </div>
+          <div class="step">
+            <span class="step-icon"><i data-lucide="cpu"></i></span>
+            <h3>3. Model</h3>
+            <p>The trained Lasso regression model calculates the predicted calories.</p>
+          </div>
+          <div class="step">
+            <span class="step-icon"><i data-lucide="trending-up"></i></span>
+            <h3>4. Result</h3>
+            <p>The API returns the value and this page displays it in kilocalories.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input information -->
+    <section class="section" id="inputs">
+      <div class="container">
+        <h2 class="section-title">Model inputs</h2>
+        <p class="section-sub">The model uses these seven features from the dataset.</p>
+
+        <div class="info-grid">
+          <div class="info-item"><i data-lucide="user"></i><div><h3>Gender</h3><p>Female or male, encoded as two columns.</p></div></div>
+          <div class="info-item"><i data-lucide="calendar"></i><div><h3>Age</h3><p>Age in years.</p></div></div>
+          <div class="info-item"><i data-lucide="ruler"></i><div><h3>Height</h3><p>Height in centimeters.</p></div></div>
+          <div class="info-item"><i data-lucide="scale"></i><div><h3>Weight</h3><p>Body weight in kilograms.</p></div></div>
+          <div class="info-item"><i data-lucide="timer"></i><div><h3>Duration</h3><p>Length of the workout in minutes.</p></div></div>
+          <div class="info-item"><i data-lucide="heart-pulse"></i><div><h3>Heart Rate</h3><p>Heart rate during exercise in beats per minute.</p></div></div>
+          <div class="info-item"><i data-lucide="thermometer"></i><div><h3>Body Temp</h3><p>Body temperature during exercise in degrees Celsius.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="brand brand-footer">
+        <span class="brand-icon"><i data-lucide="flame"></i></span>
+        <span>CalorieIQ</span>
+      </div>
+      <p>Built with Python, scikit-learn and Flask. Estimates are for educational use only and are not medical advice.</p>
+    </div>
+  </footer>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="script.js"></script>
+</body>
+</html>
